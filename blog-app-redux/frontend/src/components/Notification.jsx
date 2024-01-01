@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
 
-const Notification = ({ message, appliedStyle }) => {
+const Notification = () => {
   const notification = useSelector((state) => state.notification);
   return (
     <>
-      <p style={appliedStyle}>{notification}</p>
+      <p>{notification}</p>
     </>
   );
 };

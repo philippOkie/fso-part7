@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { notify } from "./reducers/notificationReducer";
+import { Routes, Route } from "react-router-dom";
+import PropTypes from "prop-types";
+
+import { notify } from "./reducers/notificationSlice";
 import { setUser, clearUser } from "./reducers/userSlice";
 import {
   setBlogs,
@@ -9,23 +12,27 @@ import {
   removeBlog,
 } from "./reducers/blogSlice";
 
-import Blog from "./components/Blog";
-import BlogMoreInfo from "./components/BlogMoreInfo";
 import Notification from "./components/Notification";
+import BlogFull from "./components/BlogFull";
 import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
+import BlogList from "./components/BlogList";
+import Menu from "./components/Menu";
+
 import blogService from "./services/blogs";
+import userService from "./services/users";
 import loginService from "./services/login";
-import PropTypes from "prop-types";
+import UsersList from "./components/UsersList";
+import User from "./components/User";
 
 const App = () => {
   const dispatch = useDispatch();
-  const notification = useSelector((state) => state.notification);
   const blogs = useSelector((state) => state.blogs);
 
   const user = useSelector((state) => state.user);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -34,6 +41,15 @@ const App = () => {
     };
 
     fetchBlogs();
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const users = await userService.getAll();
+      setUsers(users);
+    };
+
+    fetchUsers();
   }, []);
 
   useEffect(() => {
@@ -46,29 +62,16 @@ const App = () => {
   }, []);
 
   const blogFormRef = useRef();
-  const blogRef = useRef();
-
-  const green = {
-    color: "green",
-    border: "green 2px solid",
-  };
-
-  const red = {
-    color: "red",
-    border: "red 2px solid",
-  };
-
-  const blogStyle = {
-    border: "solid 1px black",
-    height: "auto",
-    margin: "0.5%",
-    display: "flex",
-    flexDirection: "column",
-  };
 
   const handleLikeBlog = async (id) => {
     try {
       const blog = blogs.find((b) => b.id === id);
+
+      if (!blog) {
+        console.error(`Blog with id ${id} not found`);
+        return;
+      }
+
       const changedBlog = { ...blog, likes: blog.likes + 1 };
 
       const returnedBlog = await blogService.update(id, changedBlog);
@@ -139,7 +142,7 @@ const App = () => {
     return (
       <>
         <h2>log in to application </h2>
-        <Notification message={notification} />
+        <Notification />
         <form onSubmit={handleSubmitLogin}>
           <div>
             username
@@ -184,24 +187,45 @@ const App = () => {
         loginForm()
       ) : (
         <div>
-          <h2>blogs</h2>
-          <Notification message={notification} />
-          <p>{user.name} logged in</p>
-          <button onClick={handleLogout}>logout</button>
-          {blogForm()}
-          {blogs.map((blog) => (
-            <div className="blog-info" key={blog.id} style={blogStyle}>
-              <Blog blog={blog} />
-              <Togglable buttonLabel="view" ref={blogRef}>
-                <BlogMoreInfo
+          <Menu user={user} handleLogout={handleLogout} blogForm={blogForm} />
+
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <BlogList
+                  blogs={blogs}
                   user={user}
-                  blog={blog}
-                  handleLikeBlog={() => handleLikeBlog(blog.id)}
-                  handleRemoveBlog={() => handleRemoveBlog(blog.id)}
+                  handleLikeBlog={handleLikeBlog}
+                  handleRemoveBlog={handleRemoveBlog}
                 />
-              </Togglable>
-            </div>
-          ))}
+              }
+            />
+            <Route
+              path="/blogs"
+              element={
+                <BlogList
+                  blogs={blogs}
+                  user={user}
+                  handleLikeBlog={handleLikeBlog}
+                  handleRemoveBlog={handleRemoveBlog}
+                />
+              }
+            />
+            <Route path="/users" element={<UsersList users={users} />} />
+            <Route path="/users/:id" element={<User users={users} />} />
+            <Route
+              path="/blogs/:id"
+              element={
+                <BlogFull
+                  blogs={blogs}
+                  handleLikeBlog={handleLikeBlog}
+                  handleRemoveBlog={handleRemoveBlog}
+                  user={user}
+                />
+              }
+            />
+          </Routes>
         </div>
       )}
     </div>

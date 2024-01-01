@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import notificationReducer from "./reducers/notificationReducer";
+import notificationReducer from "./reducers/notificationSlice";
 import blogReducer from "./reducers/blogSlice";
 import userSlice from "./reducers/userSlice";
 
@@ -10,7 +10,5 @@ const store = configureStore({
     user: userSlice,
   },
 });
-
-console.log(store.getState());
 
 export default store;
