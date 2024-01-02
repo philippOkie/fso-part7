@@ -1,5 +1,7 @@
 import Notification from "./Notification";
 
+import { Button } from "react-bootstrap";
+
 const Menu = ({ handleLogout, user, blogForm }) => {
   const padding = {
     paddingRight: 5,
@@ -7,17 +9,21 @@ const Menu = ({ handleLogout, user, blogForm }) => {
 
   return (
     <div>
-      <h2>blogs</h2>
+      <h2>Blogs</h2>
       <Notification />
+
       <a href="/users" style={padding}>
-        users
+        Users
       </a>
       <a href="/blogs" style={padding}>
-        blogs
+        Blogs
       </a>
+
       <div>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
+        {user.name} logged in{" "}
+        <Button variant="danger" onClick={handleLogout}>
+          logout
+        </Button>
         {blogForm()}
       </div>
     </div>

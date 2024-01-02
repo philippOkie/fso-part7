@@ -1,13 +1,15 @@
+import { Button } from "react-bootstrap";
+
 const BlogMoreInfo = ({ blog, handleLikeBlog, handleRemoveBlog, user }) => {
   return (
     <div>
       <p>{blog.author}</p>
       <p>{blog.url}</p>
-      {`Likes: ${blog.likes}`} <button onClick={handleLikeBlog}>like</button>
+      {`Likes: ${blog.likes}`} <Button onClick={handleLikeBlog}>like</Button>
       {user.username === blog.author && (
-        <button id="remove-btn" onClick={handleRemoveBlog}>
+        <Button id="remove-btn" onClick={handleRemoveBlog}>
           remove
-        </button>
+        </Button>
       )}
     </div>
   );

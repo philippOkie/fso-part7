@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Alert } from "react-bootstrap";
 
 const User = ({ users }) => {
   const style = {
@@ -9,7 +10,7 @@ const User = ({ users }) => {
   const user = users.find((u) => String(u.id) === id);
 
   if (!user) {
-    return <div>User not found</div>;
+    return <Alert variant="danger">User not found</Alert>;
   }
 
   return (

@@ -8,6 +8,8 @@ import blogService from "../services/blogs";
 
 import Comments from "../components/Comments";
 
+import { Alert, Button, Card } from "react-bootstrap";
+
 const BlogFull = ({ blogs, handleRemoveBlog, user }) => {
   const dispatch = useDispatch();
 
@@ -36,23 +38,23 @@ const BlogFull = ({ blogs, handleRemoveBlog, user }) => {
   };
 
   if (!blog) {
-    return <div>Blog not found</div>;
+    return <Alert variant="danger">Blog not found</Alert>;
   }
 
   return (
-    <div>
+    <Card style={{ width: "18rem" }}>
       <h2>{blog.title}</h2>
       <p>added by {blog.author}</p>
       <p>{blog.url}</p>
       {`Likes: ${blog.likes}`}{" "}
-      <button onClick={() => handleLikeBlog(blog.id)}>like</button>
+      <Button onClick={() => handleLikeBlog(blog.id)}>like</Button>{" "}
       {user.username === blog.author && (
-        <button id="remove-btn" onClick={handleRemoveBlog}>
+        <Button variant="danger" id="remove-btn" onClick={handleRemoveBlog}>
           remove
-        </button>
+        </Button>
       )}
       <Comments blog={blog} />
-    </div>
+    </Card>
   );
 };
 

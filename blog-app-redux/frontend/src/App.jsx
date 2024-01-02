@@ -25,6 +25,8 @@ import loginService from "./services/login";
 import UsersList from "./components/UsersList";
 import User from "./components/User";
 
+import { Form, Button } from "react-bootstrap";
+
 const App = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
@@ -141,9 +143,9 @@ const App = () => {
   const loginForm = () => {
     return (
       <>
-        <h2>log in to application </h2>
+        <h2>Log in to application </h2>
         <Notification />
-        <form onSubmit={handleSubmitLogin}>
+        <Form onSubmit={handleSubmitLogin}>
           <div>
             username
             <input
@@ -162,15 +164,15 @@ const App = () => {
               value={password}
               name="Password"
               onChange={({ target }) => setPassword(target.value)}
-            />
+            />{" "}
           </div>
-          <button id="login-button" type="submit">
+          <Button variant="success" id="login-button" type="submit">
             login
-          </button>
-          <button type="reset" onClick={handleReset}>
+          </Button>{" "}
+          <Button variant="warning" type="reset" onClick={handleReset}>
             cancel
-          </button>
-        </form>
+          </Button>
+        </Form>
       </>
     );
   };
@@ -182,7 +184,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       {user === null ? (
         loginForm()
       ) : (
