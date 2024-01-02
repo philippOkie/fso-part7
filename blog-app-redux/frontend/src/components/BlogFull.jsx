@@ -51,7 +51,7 @@ const BlogFull = ({ blogs, handleRemoveBlog, user }) => {
           remove
         </button>
       )}
-      <Comments />
+      <Comments blog={blog} />
     </div>
   );
 };
